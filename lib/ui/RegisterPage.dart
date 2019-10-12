@@ -7,30 +7,45 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-
   bool _isEnabled = false;
+  bool _isMatched = null;
 
   String _username = "";
   String _email = "";
   String _password = "";
   String _confirmPassword = "";
 
-  validateAndSave(){
+  final formKey = GlobalKey<FormState>();
 
+  bool validateAndSave() {
+    final form = formKey.currentState;
+    var passwordIsMatched = _checkPasswordAreMatched();
+
+    if(passwordIsMatched){
+      setState(() {
+       _isMatched =  false;
+      });
+    }else{
+      setState(() {
+       _isMatched = true; 
+      });
+    }
+
+    if (form.validate()) {
+      form.save();
+      return true;
+    } else if (_password != _confirmPassword) {
+      return false;
+    }
+    return false;
   }
 
-  moveToRegister(){
-
+  bool _checkPasswordAreMatched() {
+    if (_password == _confirmPassword) {
+      return true;
+    }
+    return false;
   }
-
-  _onChanged(e, name){
-    setState(() {
-          name= true;
-        });
-        print(_isEnabled);
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -43,47 +58,78 @@ class _RegisterPageState extends State<RegisterPage> {
       body: KeyboardAvoider(
         autoScroll: true,
         child: Container(
-        margin: EdgeInsets.all(15.0),
-        child: Form(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: createInputs() + createBtns()
+          margin: EdgeInsets.all(15.0),
+          child: Form(
+            key: formKey,
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: createInputs() + createBtns()),
           ),
         ),
-      ),
       ),
     );
   }
 
   List<Widget> createInputs() {
     return [
-      SizedBox(height: 10.0,),
+      SizedBox(
+        height: 10.0,
+      ),
       logo(),
-      SizedBox(height: 10.0,),
+      SizedBox(
+        height: 10.0,
+      ),
       TextFormField(
         decoration: InputDecoration(labelText: 'Username'),
-        onChanged: (e) => _onChanged(e, _isEnabled),
+        validator: (value) => value.isEmpty ? 'Username is Required' : null,
+        onSaved: (value) => _username = value,
+        // onChanged: (e) => _onChanged(e, _isEnabled),
       ),
-      SizedBox(height: 10.0,),
+      SizedBox(
+        height: 10.0,
+      ),
       TextFormField(
         decoration: InputDecoration(labelText: 'Email'),
+        validator: (value) => value.isEmpty ? 'Email is Required' : null,
+        onSaved: (value) => _email = value,
       ),
-      SizedBox(height: 10.0,),
+      SizedBox(
+        height: 10.0,
+      ),
       TextFormField(
         decoration: InputDecoration(labelText: 'Password'),
+        validator: (value) => value.isEmpty ? 'Password is Required' : null,
+        onSaved: (value) => _password = value,
       ),
-      SizedBox(height: 10.0,),
+      SizedBox(
+        height: 10.0,
+      ),
       TextFormField(
         decoration: InputDecoration(labelText: 'Confirm Password'),
-        
+        validator: (value) =>
+            value.isEmpty ? 'Confirm Password is Required' : null,
+        onSaved: (value) => _confirmPassword = value,
       ),
-      SizedBox(height: 20.0,),
+      SizedBox(
+        height: 20.0,
+      ),
+      Text(
+          _isMatched == false
+              ? "Password and Confirm Password Did not Matched"
+              : "",
+          style: TextStyle(color: Colors.redAccent)),
+      SizedBox(
+        height: 20.0,
+      )
     ];
   }
 
-  Widget logo(){
+  Widget logo() {
     return Image.asset(
-              'images/1.gif', width: 80.0,height: 80.0,);
+      'images/1.gif',
+      width: 80.0,
+      height: 80.0,
+    );
   }
 
   List<Widget> createBtns() {
@@ -92,13 +138,14 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Text("Register", style: TextStyle(fontSize: 20.0)),
         textColor: Colors.white,
         color: Colors.red,
-        onPressed: _isEnabled ? ()=>validateAndSave() : null,
+        onPressed: () => validateAndSave(),
       ),
       FlatButton(
-        child: Text("Already Registerd? Login Here", style: TextStyle(fontSize: 14.0)),
+        child: Text("Already Registerd? Login Here",
+            style: TextStyle(fontSize: 14.0)),
         textColor: Colors.white,
         color: Colors.transparent,
-        onPressed: ()=>Navigator.pushReplacementNamed(context, '/'),
+        onPressed: () => Navigator.pushReplacementNamed(context, '/'),
       )
     ];
   }
