@@ -3,18 +3,23 @@ import 'package:flutter/material.dart';
 
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  Future SignIn(String email, String password) async {
-    FirebaseUser user = await _auth.signInWithEmailAndPassword(
+  Future SignIn(String email, String password, BuildContext context) async {
+    try {
+        FirebaseUser user = await _auth.signInWithEmailAndPassword(
         email: email, password: password);
+        Navigator.pushReplacementNamed(context, "/");
     print(user);
     return user.uid;
+    } catch (e) {
+      print(e.message);
+    }
   }
 
   Future<String> SignUp(String username, String email, String password, BuildContext context) async {
     try {
       FirebaseUser user = await _auth.createUserWithEmailAndPassword(
         email: email, password: password);
-        Navigator.pushReplacementNamed(context, "/login");
+        Navigator.pushReplacementNamed(context, "/");
         return user.uid;
     } catch (e) {
       print(e.message);

@@ -13,6 +13,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  var _auth = Auth();
+
   String _email = "";
   String _password = "";
 
@@ -22,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
     final form = formKey.currentState;
     if (form.validate()) {
       form.save();
+      _auth.SignIn(_email, _password, context);
       return true;
     }
     return false;
