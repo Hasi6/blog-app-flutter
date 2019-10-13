@@ -1,7 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_stackoverflow/ui/UserAlert.dart';
 
 class Auth {
+
+  var _dialog = UserAlert();
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Future SignIn(String email, String password, BuildContext context) async {
     try {
@@ -11,7 +15,7 @@ class Auth {
     print(user);
     return user.uid;
     } catch (e) {
-      print(e.message);
+      _dialog.information(context, "Login Error", e.message);
     }
   }
 
@@ -22,7 +26,7 @@ class Auth {
         Navigator.pushReplacementNamed(context, "/");
         return user.uid;
     } catch (e) {
-      print(e.message);
+     _dialog.information(context, "Register Error", e.message);
     }
     
     
@@ -38,6 +42,10 @@ class Auth {
   }
 
   Future SignOut() async {
-    await _auth.signOut();
+    try {
+      await _auth.signOut();
+    } catch (e) {
+      print(e.message);
+    }
   }
 }
