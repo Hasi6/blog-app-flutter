@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
+import 'package:my_stackoverflow/auth/Auth.dart';
 
 class RegisterPage extends StatefulWidget {
   _RegisterPageState createState() => _RegisterPageState();
@@ -10,40 +11,23 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _isEnabled = false;
   bool _isMatched = null;
 
+  var _auth = Auth();
+
   String _username = "";
   String _email = "";
   String _password = "";
-  String _confirmPassword = "";
 
   final formKey = GlobalKey<FormState>();
 
   bool validateAndSave() {
     final form = formKey.currentState;
-    var passwordIsMatched = _checkPasswordAreMatched();
 
-    if(passwordIsMatched){
-      setState(() {
-       _isMatched =  false;
-      });
-    }else{
-      setState(() {
-       _isMatched = true; 
-      });
-    }
-
-    if (form.validate()) {
+     if (form.validate()) {
       form.save();
+      var id = _auth.SignUp(_username, _email, _password, context);
+      print("${id.toString()} hasi");
       return true;
-    } else if (_password != _confirmPassword) {
-      return false;
-    }
-    return false;
-  }
-
-  bool _checkPasswordAreMatched() {
-    if (_password == _confirmPassword) {
-      return true;
-    }
+    } else 
     return false;
   }
 
@@ -100,24 +84,14 @@ class _RegisterPageState extends State<RegisterPage> {
         decoration: InputDecoration(labelText: 'Password'),
         validator: (value) => value.isEmpty ? 'Password is Required' : null,
         onSaved: (value) => _password = value,
+        obscureText: true,
       ),
       SizedBox(
         height: 10.0,
       ),
-      TextFormField(
-        decoration: InputDecoration(labelText: 'Confirm Password'),
-        validator: (value) =>
-            value.isEmpty ? 'Confirm Password is Required' : null,
-        onSaved: (value) => _confirmPassword = value,
-      ),
       SizedBox(
         height: 20.0,
       ),
-      Text(
-          _isMatched == false
-              ? "Password and Confirm Password Did not Matched"
-              : "",
-          style: TextStyle(color: Colors.redAccent)),
       SizedBox(
         height: 20.0,
       )
@@ -125,10 +99,10 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget logo() {
-    return Image.asset(
-      'images/1.gif',
-      width: 80.0,
-      height: 80.0,
+    return Image.network(
+      'https://firebasestorage.googleapis.com/v0/b/twitter-clone-by-hasi.appspot.com/o/app_logo%2F9a4a63e9-ef14-4cf9-bbea-040a53033945_200x200.png?alt=media&token=41e404e9-0986-4a0a-b80f-f5d4d7507424',
+      width: 180.0,
+      height: 180.0,
     );
   }
 
