@@ -8,8 +8,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  bool _isEnabled = false;
-  bool _isMatched = null;
 
   var _auth = Auth();
 

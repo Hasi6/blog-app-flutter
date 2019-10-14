@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     if (loading) {
       return Center(
-        child: Text("Loading"),
+        child: CircularProgressIndicator(),
       );
     } else {
       return Scaffold(
@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                   iconSize: 40.0,
                   color: Colors.white,
                   onPressed: () =>
-                      Navigator.pushReplacementNamed(context, "/register"),
+                      Navigator.pushNamed(context, "/upload"),
                 )
               ],
             ),
